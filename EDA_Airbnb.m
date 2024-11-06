@@ -1,15 +1,15 @@
 % Load the data - Importing the dataset for analysis
 data = readtable('AB_US_2023.csv');
 
-% Show where there might be missing values in the dataset
+% Identify and display missing values in the dataset
 missingValues = sum(ismissing(data));
 missingValuesTable = table(data.Properties.VariableNames', missingValues', ...
     'VariableNames', {'VariableName', 'MissingCount'});
 disp('Missing Values in the Dataset:');
 disp(missingValuesTable);
-missingMatrix = ismissing(data);
 
-% Generate a heatmap
+% Visualize missing values using a heatmap
+missingMatrix = ismissing(data);
 numericMissingMatrix = double(missingMatrix);
 figure;
 colormap([0.8 0.8 0.8; 0.5 0.5 0.5]);
@@ -22,28 +22,24 @@ yticks(1:size(data, 1));
 yticklabels([]);
 ylabel('Rows');
 
-% Remove the 'neighbourhood_group' column from the dataset
+% Remove unnecessary column
 data.neighbourhood_group = [];
 
-% Display some basic statistics about the dataset
+% Display basic statistics
 basicStatisticsTable = summary(data);
 disp('Basic Statistics:');
 disp(basicStatisticsTable);
 
-% Define the lower and upper bounds for the IQR
-lower_bound = 0.25;
-upper_bound = 0.75;
-
-% Filter the data based on specific conditions to focus on specific observations
-iqr_data = data(data.price >= quantile(data.price, lower_bound) & ...
-    data.price <= quantile(data.price, upper_bound) & ...
+% Define and filter data based on specific conditions
+iqr_data = data(data.price >= quantile(data.price, 0.25) & ...
+    data.price <= quantile(data.price, 0.75) & ...
     data.number_of_reviews > 0 & ...
     data.calculated_host_listings_count < 10 & ...
     data.number_of_reviews < 400 & ...
     data.minimum_nights < 10 & ...
     data.reviews_per_month < 5, :);
 
-% Basic statistics of the filtered data
+% Display basic statistics of filtered data
 filteredBasicStatisticsTable = summary(iqr_data);
 disp('Basic Statistics (Filtered Data):');
 disp(filteredBasicStatisticsTable);
@@ -55,13 +51,13 @@ filteredMissingValuesTable = table(iqr_data.Properties.VariableNames', ...
 disp('Missing Values in the Filtered Dataset:');
 disp(filteredMissingValuesTable);
 
-% Correlations between numeric columns and price
+% Correlation analysis between numeric columns and price
 numericColumns = {'latitude', 'longitude', 'price', 'minimum_nights', ...
     'number_of_reviews', 'reviews_per_month', 'calculated_host_listings_count', ...
     'availability_365', 'number_of_reviews_ltm'};
 correlations = corr(iqr_data{:, numericColumns}, 'Rows', 'complete');
 
-% Missing values in the filtered data using a heatmap
+% Visualize missing values in filtered data using a heatmap
 figure;
 imagesc(ismissing(iqr_data));
 title('Missing Values Proportion (Filtered)');
@@ -73,28 +69,28 @@ yticks(1:size(iqr_data, 1));
 yticklabels([]);
 ylabel('Rows');
 
-% Create a box plot to explore the distribution of price
+% Box plot of price distribution in filtered data
 figure;
 boxplot(iqr_data.price, 'Colors', 'b');
 title('Boxplot of Price (Filtered)');
 ylabel('Price');
 
-% KDE plot to visualise the distribution of price
+% KDE plot of price distribution
 figure;
 ksdensity(iqr_data.price);
 title('KDE Plot of Price (Filtered)');
 xlabel('Price');
 ylabel('Density');
 
-% The relationship between latitude and price
+% Scatter plot of latitude vs. price
 figure;
-scatter(iqr_data.latitude, iqr_data.price, 10, 'filled', 'MarkerFaceAlpha', 0.5, ...
-    'MarkerFaceColor', 'b');
+scatter(iqr_data.latitude, iqr_data.price, 10, 'filled', ...
+    'MarkerFaceAlpha', 0.5, 'MarkerFaceColor', 'b');
 title('Scatter Plot of Latitude vs. Price (Filtered)');
 xlabel('Latitude');
 ylabel('Price');
 
-% Price varies by room type using a bar plot
+% Bar plot of price by room type
 figure;
 uniqueRoomTypes = unique(iqr_data.room_type);
 means = grpstats(iqr_data.price, iqr_data.room_type, 'mean');
@@ -105,14 +101,12 @@ xlabel('Room Type');
 ylabel('Price');
 xtickangle(45);
 
-% Correlation matrix display
+% Correlation matrix visualization
 figure;
 imagesc(correlations);
 title('Correlation Matrix (Filtered)');
 colormap('jet');
 colorbar;
-
-% Annotate the cells in the correlation matrix
 [nrows, ncols] = size(correlations);
 for i = 1:nrows
     for j = 1:ncols
@@ -126,14 +120,14 @@ yticks(1:length(numericColumns));
 yticklabels(numericColumns);
 xtickangle(60);
 
-% Create a box plot to visualise the distribution of price by room_type
+% Box plot of price by room type
 figure;
 boxplot(iqr_data.price, iqr_data.room_type);
 title('Price Distribution by Room Type');
 xlabel('Room Type');
 ylabel('Price');
 
-% Create a bar chart to compare prices by city
+% Horizontal bar chart comparing prices by city
 figure;
 unique_cities = unique(iqr_data.city);
 mean_prices_by_city = zeros(size(unique_cities));
