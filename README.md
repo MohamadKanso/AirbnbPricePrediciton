@@ -13,7 +13,7 @@ An advanced machine learning analysis comparing Linear Regression and Random For
 - Processed and analyzed 232,147 property listings
 - Engineered novel features for enhanced prediction accuracy
 
-## 🔬 Technical Implementation
+## 🔬  Implementation
 
 ### Data Processing
 ```matlab
@@ -55,7 +55,7 @@ filtered_data = data(data.price >= lower_bound_price & ...
 - RMSE of 98.221
 
 ### Random Forest Model
-- 100 decision trees in ensemble
+- 100 decision trees in the ensemble
 - Advanced feature engineering
 - Robust against outliers
 - RMSE of 87.960
@@ -102,23 +102,6 @@ selected_features = ["latitude", "longitude", "minimum_nights", ...
   - Handles non-linear relationships
   - More computationally intensive
 
-## 🚀 Future Enhancements
-
-1. **Model Optimization**
-   - Hyperparameter tuning
-   - Cross-validation implementation
-   - Advanced feature engineering
-
-2. **Feature Engineering**
-   - Geographic clustering
-   - Temporal analysis
-   - Review sentiment analysis
-
-3. **Performance Improvements**
-   - Parallel processing
-   - Memory optimization
-   - Computation efficiency
-
 ## 📚 Repository Structure
 
 ```
@@ -134,13 +117,9 @@ airbnb-price-prediction/
 
 ## 📮 Contact
 
-For inquiries or collaboration:
 - 📧 Email: mohamadghorikanso@gmail.com
 - 💼 LinkedIn: [Mohamad Kanso](https://www.linkedin.com/in/mohamad-kanso/)
 
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ---
 *Note: This project was completed as part of my MSc Data Science program at City, University of London.*
